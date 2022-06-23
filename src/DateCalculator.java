@@ -107,9 +107,9 @@ public class DateCalculator {
      * @return updated date
      */
     private static Date progressMonth(int day,int month, int year){
-        int daysInMonth = numDays(month);
+        int daysInMonth = numDays(month,year);
         if (day<1){
-            return progressYear(numDays(month-1),month -1,year);
+            return progressYear(numDays(month-1,year),month -1,year);
         }
         if (day <daysInMonth){
             return new Date(day,month,year);

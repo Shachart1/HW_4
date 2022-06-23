@@ -104,21 +104,18 @@ public class DateCalculator {
      * @param day
      * @param month
      * @param year
-     * @return
+     * @return updated date
      */
     private static Date progressMonth(int day,int month, int year){
-          if(day>=1 && day<=31){
-              return new Date(day,month + 1,year);
-          }
-          if(day>31){
-              return progressYear(1,month + 1,year);
-          }
-          if(day<1){
-              return progressYear(day,month + 1,year);
-          }
-          if(day>=1 && day<=30){
-              return new Date(day,month + 1,year);
-          }
-          return new Date(1,1,1);
+        int daysInMonth = numDays(month);
+        if (day<1){
+            return progressYear(numDays(month-1),month -1,year);
+        }
+        if (day <daysInMonth){
+            return new Date(day,month,year);
+        }
+        else{
+            return progressYear(1,month +1,year);
+        }
   }
 }

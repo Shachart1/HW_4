@@ -1,6 +1,7 @@
 public class DateCalculator {
-    int[] ends_30 = {january,march,may,july,august,october,december};
-    int[] ends_31 = {april,june,septemnber,};
+    int[] ends_30 = {Months.JANUARY.ordinal(),Months.MARCH.ordinal(),Months.MAY.ordinal(),
+                        Months.JULY.ordinal(),Months.AUGUST.ordinal(),Months.OCTOBER.ordinal(),Months.DECEMBER.ordinal()};
+    int[] ends_31 = {Months.APRIL.ordinal(),Months.JUNE.ordinal(),Months.SEPTEMBER.ordinal(),Months.NOVEMBER.ordinal()};
     public static Date addToDate(Date date, int num) {
         if (num==0){
             return date;
@@ -59,7 +60,9 @@ public class DateCalculator {
         return false;
     }
 
-    private Date progressMonth(int day,int month, int year){
-
+    private Date progressMonth(int day,Months month, int year){
+  switch (month){
+      case (month)
+  }
     }
 }

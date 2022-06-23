@@ -1,13 +1,25 @@
 public class DateCalculator {
+    final static int JANUARY = 1;
+    final static int FEBRUARY = 2;
+    final static int MARCH = 3;
+    final static int APRIL = 4;
+    final static int MAY = 5;
+    final static int JUNE = 6;
+    final static int JULY = 7;
+    final static int AUGUST = 8;
+    final static int SEPTEMBER = 9;
+    final static int OCTOBER = 10;
+    final static int NOVEMBER = 11;
+    final static int DECEMBER = 12;
 
     public static Date addToDate(Date date, int num) {
         if (num==0){
             return date;
         }
         if(num > 0){
-            return addToDate(progress(date,1),num-1);
+            return addToDate(progressDay(date,1),num-1);
         }
-        return addToDate(progress(date,-1),num+1);
+        return addToDate(progressDay(date,-1),num+1);
     }
 
     /**
@@ -16,12 +28,12 @@ public class DateCalculator {
      * @param sign - 1 if we want to add a day and -1 if we want to decrease a day
      * @return - updated date
      */
-    private Date progressDay(Date date,int sign){
+    private static Date progressDay(Date date,int sign){
         int year = date.getYear();
-        int month = date.getMonth() - 1;
+        int month = date.getMonth();
         int day = date.getDay()+sign;
         if(day <= 27 && day >=1){
-            return new Date(day,month +1,year);
+            return new Date(day,month ,year);
         }
         else{
             return progressMonth(day,month,year);
@@ -37,15 +49,15 @@ public class DateCalculator {
      * @param year - current year
      * @return the progressed date
      */
-    private Date progressYear(int day, int month, int year){
-        if(month > Months.DECEMBER.ordinal()){ // need to add a Year
+    private static Date progressYear(int day, int month, int year){
+        if(month > DECEMBER){ // need to add a Year
             day = 1; // 1st in January
-            month = Months.JANUARY.ordinal();
+            month = JANUARY;
             year ++;
         }
         else { // need to decrease year
             day = 31; // 31st in December
-            month = Months.DECEMBER.ordinal();
+            month = DECEMBER;
             year --;
         }
         return new Date(day, month + 1, year); // adding 1 to month since we decreased it before to use enum
@@ -56,11 +68,36 @@ public class DateCalculator {
      * @param year - the current year
      * @return true - year is leap year, false - leap is regular year
      */
-    private boolean isLeapYear(int year){
+    private static boolean isLeapYear(int year){
         if((year % 400 == 0) || (year % 4 == 0 && year % 100 != 0)){
             return true;
         }
         return false;
+    }
+
+    private static int numDays(int month, int year) {
+        switch (month){
+            case JANUARY:
+            case MARCH:
+            case MAY:
+            case JULY:
+            case AUGUST:
+            case OCTOBER:
+            case DECEMBER:
+                return 31; //31 days in the month
+
+            case APRIL:
+            case JUNE:
+            case SEPTEMBER:
+            case NOVEMBER:
+                return 30; // 30 days in the month
+
+            case FEBRUARY:
+                if(isLeapYear(year)) return 29;
+                return 28;
+            default:
+                return -1; // ERROR
+        }
     }
 
     /**
@@ -70,39 +107,19 @@ public class DateCalculator {
      * @param year
      * @return
      */
-
-    private Date progressMonth(int day,Months month, int year){
-  switch (month){
-      case JANUARY:
-      case MARCH:
-      case MAY:
-      case JULY:
-      case AUGUST:
-      case OCTOBER:
-      case DECEMBER:
+    private static Date progressMonth(int day,int month, int year){
           if(day>=1 && day<=31){
-              return new Date(day,month.ordinal()+1,year);
+              return new Date(day,month + 1,year);
           }
           if(day>31){
-              return progressYear(1,month.ordinal()+1,year);
+              return progressYear(1,month + 1,year);
           }
           if(day<1){
-
-              return progressYear(day,month.ordinal()+1,year);
-
+              return progressYear(day,month + 1,year);
           }
-
-      case APRIL:
-      case JUNE:
-      case SEPTEMBER:
-      case NOVEMBER:
           if(day>=1 && day<=30){
-              return new Date(day,month.ordinal()+1,year);
+              return new Date(day,month + 1,year);
           }
-
-      default:
-
-jh
+          return new Date(1,1,1);
   }
-    }
 }

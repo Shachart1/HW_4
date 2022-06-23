@@ -1,7 +1,5 @@
 public class DateCalculator {
-    int[] ends_30 = {Months.JANUARY.ordinal(),Months.MARCH.ordinal(),Months.MAY.ordinal(),
-                        Months.JULY.ordinal(),Months.AUGUST.ordinal(),Months.OCTOBER.ordinal(),Months.DECEMBER.ordinal()};
-    int[] ends_31 = {Months.APRIL.ordinal(),Months.JUNE.ordinal(),Months.SEPTEMBER.ordinal(),Months.NOVEMBER.ordinal()};
+
     public static Date addToDate(Date date, int num) {
         if (num==0){
             return date;
@@ -12,13 +10,18 @@ public class DateCalculator {
         return addToDate(progress(date,-1),num+1);
     }
 
-
+    /**
+     * will update the day as needed and return the new date
+     * @param date - date to update
+     * @param sign - 1 if we want to add a day and -1 if we want to decrease a day
+     * @return - updated date
+     */
     private Date progressDay(Date date,int sign){
         int year = date.getYear();
-        Months month = Months.valueOf((date.getMonth() - 1).toString());
+        int month = date.getMonth() - 1;
         int day = date.getDay()+sign;
         if(day <= 27 && day >=1){
-            return new Date(day,month.ordinal()+1,year);
+            return new Date(day,month +1,year);
         }
         else{
             return progressMonth(day,month,year);
@@ -34,18 +37,18 @@ public class DateCalculator {
      * @param year - current year
      * @return the progressed date
      */
-    private Date progressYear(int day, Months month, int year){
-        if(month.compareTo(Months.DECEMBER) > 0){ // need to add a Year
+    private Date progressYear(int day, int month, int year){
+        if(month > Months.DECEMBER.ordinal()){ // need to add a Year
             day = 1; // 1st in January
-            month = Months.JANUARY;
+            month = Months.JANUARY.ordinal();
             year ++;
         }
         else { // need to decrease year
             day = 31; // 31st in December
-            month = Months.DECEMBER;
+            month = Months.DECEMBER.ordinal();
             year --;
         }
-        return new Date(day, month.ordinal() + 1, year); // adding 1 to month since we decreased it before to use enum
+        return new Date(day, month + 1, year); // adding 1 to month since we decreased it before to use enum
     }
 
     /**

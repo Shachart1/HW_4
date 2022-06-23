@@ -45,7 +45,7 @@ public class DateCalculator {
         return false;
     }
 
-    private Date progressMonth(int day,int month, int year){
+    private Date progressMonth(int day,Months month, int year){
   switch (month){
       case (month)
   }

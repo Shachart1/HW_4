@@ -75,7 +75,7 @@ public class DateCalculator {
         return false;
     }
 
-    private static int numDays(int month) {
+    private static int numDays(int month, int year) {
         switch (month){
             case JANUARY:
             case MARCH:
@@ -93,7 +93,8 @@ public class DateCalculator {
                 return 30; // 30 days in the month
 
             case FEBRUARY:
-                return 28; // regular year
+                if(isLeapYear(year)) return 29; // Leap year
+                return 28; // Regular year
             default:
                 return -1; // ERROR
         }

@@ -25,10 +25,25 @@ public class DateCalculator {
     }
 
     private Date progressYear(int day, int month, int year){
-        if(month > Months.DECEMBER.ordinal()){ //need to add a Year
-
+        if(month > Months.DECEMBER.ordinal()){ // need to add a Year
+            day = 1; // 1st in January
+            month = Months.JANUARY.ordinal();
+            year ++;
         }
+        else { // need to decrease year
+            day = 31; // 31st in December
+            month = Months.DECEMBER.ordinal();
+            year --;
+        }
+        return new Date(day, month + 1, year); // adding 1 to month since we decreased it before to use enum
     }
+    private boolean isSpecialYear(int year){
+        if((year % 400 == 0) || (year % 4 == 0 && year % 100 != 0)){
+            return true;
+        }
+        return false;
+    }
+
     private Date progressMonth(int day,int month, int year){
 
     }

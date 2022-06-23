@@ -10,10 +10,17 @@ public class DateCalculator {
     }
 
 
-    private Date progress(Date date,int sign){
-        int day = date.getDay();
+    private Date progressDay(Date date,int sign){
+        int year = date.getYear();
+        int month = date.getMonth();
+        int day = date.getDay()+sign;
+        if(day <= 27 && day >=1){
+            return new Date(day,month,year);
+        }
+        else{
+            return progressMonth(day,month,year);
+        }
 
     }
 
-    private int
 }

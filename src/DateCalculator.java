@@ -15,5 +15,5 @@ public class DateCalculator {
 
     }
 
-    private
+    private int
 }

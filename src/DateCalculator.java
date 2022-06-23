@@ -55,12 +55,12 @@ public class DateCalculator {
             month = JANUARY;
             year ++;
         }
-        else { // need to decrease year
+        if(month < JANUARY) { // need to decrease year
             day = 31; // 31st in December
             month = DECEMBER;
             year --;
         }
-        return new Date(day, month + 1, year); // adding 1 to month since we decreased it before to use enum
+        return new Date(day, month, year); // adding 1 to month since we decreased it before to use enum
     }
 
     /**

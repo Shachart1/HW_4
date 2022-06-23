@@ -1,13 +1,13 @@
 public class Main {
     public static void main(String[] args) {
         testPartA();
-        testPartB();
+        //testPartB();
     }
 
     private static void testPartA() {
         System.out.println("Testing part A...");
         testPartA1();
-        testPartA2();
+        //testPartA2();
     }
 
     private static void testPartA1() {
@@ -32,7 +32,7 @@ public class Main {
             System.out.println("Subtracting " + -num + " from " + date + " result: " + result);
         }
     }
-
+/*
     private static void testPartA2() {
         System.out.println("Testing part A2...");
         BinNode<Integer> root = new BinNode<>(5);
@@ -157,4 +157,6 @@ class TryWithResourcesAcquireWorker extends Worker {
             }
         }
     }
+
+ */
 }

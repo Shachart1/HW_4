@@ -60,9 +60,46 @@ public class DateCalculator {
         return false;
     }
 
+    /**
+     * checking if day is legal in this month
+     * @param day
+     * @param month
+     * @param year
+     * @return
+     */
+
     private Date progressMonth(int day,Months month, int year){
   switch (month){
-      case (month)
+      case JANUARY:
+      case MARCH:
+      case MAY:
+      case JULY:
+      case AUGUST:
+      case OCTOBER:
+      case DECEMBER:
+          if(day>=1 && day<=31){
+              return new Date(day,month.ordinal()+1,year);
+          }
+          if(day>31){
+              return progressYear(1,month.ordinal()+1,year);
+          }
+          if(day<1){
+
+              return progressYear(day,month.ordinal()+1,year);
+
+          }
+
+      case APRIL:
+      case JUNE:
+      case SEPTEMBER:
+      case NOVEMBER:
+          if(day>=1 && day<=30){
+              return new Date(day,month.ordinal()+1,year);
+          }
+
+      default:
+
+
   }
     }
 }

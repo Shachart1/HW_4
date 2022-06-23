@@ -15,7 +15,7 @@ public class DateCalculator {
         int month = date.getMonth() - 1;
         int day = date.getDay()+sign;
         if(day <= 27 && day >=1){
-            return new Date(day,month,year);
+            return new Date(day,month+1,year);
         }
         else{
             return progressMonth(day,month,year);
@@ -23,7 +23,7 @@ public class DateCalculator {
     }
 
     private Date progressYear(int day, int month, int year){
-        if(month > Months.DECEMBER){ //need to add a Year
+        if(month > Months.DECEMBER.ordinal()){ //need to add a Year
 
         }
     }

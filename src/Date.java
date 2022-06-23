@@ -26,4 +26,3 @@ public class Date {
         return String.format("%02d.%02d.%d", day, month, year);
     }
 }
-hi

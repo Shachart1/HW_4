@@ -16,6 +16,12 @@ public class DateCalculator {
         if (num==0){
             return date;
         }
+        if (num > 365){
+            return addToDate(date, num-365); // to avoid stack overflow
+        }
+        if (num < -365){
+            return addToDate(date, num+365); // to avoid stack overflow
+        }
         if(num > 0){
             return addToDate(progressDay(date,1),num-1);
         }

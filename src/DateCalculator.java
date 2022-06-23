@@ -13,36 +13,75 @@ public class DateCalculator {
     final static int DECEMBER = 12;
 
     public static Date addToDate(Date date, int num) {
+        int day = date.getDay();
+        int month = date.getMonth();
+        int year = date.getYear();
         if (num==0){
             return date;
         }
         if (num > 365){
-            return addToDate(date, num-365); // to avoid stack overflow
+            if(isLeapYear(year) && month<FEBRUARY) {
+                return addToDate(new Date(day, month, year + 1), num - 366); // to avoid stack overflow
+            }
+            if(isLeapYear(year + 1) && month>FEBRUARY){
+                return addToDate(new Date(day, month, year + 1), num - 366); // to avoid stack overflow
+            }
+            else{
+                return addToDate(new Date(day, month, year + 1), num - 365);
+            }
         }
-        if (num < -365){
-            return addToDate(date, num+365); // to avoid stack overflow
+        if (num < -365) {
+            if (isLeapYear(date.getYear()) && month > FEBRUARY) {
+                return addToDate(new Date(day, month, year - 1), num + 366); // to avoid stack overflow
+            }
+            if(isLeapYear(year - 1) && month < FEBRUARY){
+                return addToDate(new Date(day, month, year - 1), num + 366); // to avoid stack overflow
+            }
+            else {
+                return addToDate(new Date(day, month, year - 1), num + 365); // to avoid stack overflow
+            }
         }
         if(num > 0){
-            return addToDate(progressDay(date,1),num-1);
+            return addToDate(progressDay(day,month,year,1),num-1);
         }
-        return addToDate(progressDay(date,-1),num+1);
+        return addToDate(progressDay(day,month,year,-1),num+1);
     }
 
     /**
      * will update the day as needed and return the new date
-     * @param date - date to update
+     * @param day
+     * @param month
+     * @param year
      * @param sign - 1 if we want to add a day and -1 if we want to decrease a day
      * @return - updated date
      */
-    private static Date progressDay(Date date,int sign){
-        int year = date.getYear();
-        int month = date.getMonth();
-        int day = date.getDay()+sign;
+    private static Date progressDay(int day, int month, int year,int sign){
+        day += sign;
         if(day <= 27 && day >=1){
             return new Date(day,month ,year);
         }
         else{
             return progressMonth(day,month,year);
+        }
+    }
+
+    /**
+     * checking if day is legal in this month
+     * @param day
+     * @param month
+     * @param year
+     * @return updated date
+     */
+    private static Date progressMonth(int day,int month, int year){
+        int daysInMonth = numDays(month,year);
+        if (day < 1){
+            return progressYear(numDays(month-1,year),month -1,year);
+        }
+        if (day <= daysInMonth){
+            return new Date(day,month,year);
+        }
+        else{
+            return progressYear(1,month +1,year);
         }
     }
 
@@ -105,25 +144,5 @@ public class DateCalculator {
                 return -1; // ERROR
         }
     }
-
-    /**
-     * checking if day is legal in this month
-     * @param day
-     * @param month
-     * @param year
-     * @return updated date
-     */
-    private static Date progressMonth(int day,int month, int year){
-        int daysInMonth = numDays(month,year);
-        if (day<1){
-            return progressYear(numDays(month-1,year),month -1,year);
-        }
-        if (day <daysInMonth){
-            return new Date(day,month,year);
-        }
-        else{
-            return progressYear(1,month +1,year);
-        }
-  }
 }
 //

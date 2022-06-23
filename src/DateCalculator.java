@@ -14,30 +14,45 @@ public class DateCalculator {
 
     private Date progressDay(Date date,int sign){
         int year = date.getYear();
-        int month = date.getMonth() - 1;
+        Months month = Months.valueOf((date.getMonth() - 1).toString());
         int day = date.getDay()+sign;
         if(day <= 27 && day >=1){
-            return new Date(day,month+1,year);
+            return new Date(day,month.ordinal()+1,year);
         }
         else{
             return progressMonth(day,month,year);
         }
     }
 
-    private Date progressYear(int day, int month, int year){
-        if(month > Months.DECEMBER.ordinal()){ // need to add a Year
+    /**
+     * update year by either adding a year or decreasing one based on month.
+     * set the date to be the first day of the year if added a year.
+     * set the date to be the last day of the year if decreased a year.
+     * @param day - progressed day
+     * @param month - progressed month
+     * @param year - current year
+     * @return the progressed date
+     */
+    private Date progressYear(int day, Months month, int year){
+        if(month.compareTo(Months.DECEMBER) > 0){ // need to add a Year
             day = 1; // 1st in January
-            month = Months.JANUARY.ordinal();
+            month = Months.JANUARY;
             year ++;
         }
         else { // need to decrease year
             day = 31; // 31st in December
-            month = Months.DECEMBER.ordinal();
+            month = Months.DECEMBER;
             year --;
         }
-        return new Date(day, month + 1, year); // adding 1 to month since we decreased it before to use enum
+        return new Date(day, month.ordinal() + 1, year); // adding 1 to month since we decreased it before to use enum
     }
-    private boolean isSpecialYear(int year){
+
+    /**
+     * checking if a year is a leap year
+     * @param year - the current year
+     * @return true - year is leap year, false - leap is regular year
+     */
+    private boolean isLeapYear(int year){
         if((year % 400 == 0) || (year % 4 == 0 && year % 100 != 0)){
             return true;
         }

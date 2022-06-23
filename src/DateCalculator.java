@@ -1,4 +1,6 @@
 public class DateCalculator {
+    int[] ends_30 = {january,march,may,july,august,october,december};
+    int[] ends_31 = {april,june,septemnber,};
     public static Date addToDate(Date date, int num) {
         if (num==0){
             return date;
@@ -22,5 +24,7 @@ public class DateCalculator {
         }
 
     }
+    private Date progressMonth(int day,int month, int year){
 
+    }
 }

@@ -3,19 +3,22 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MyReentrantLock implements Lock{
     AtomicBoolean lock = new AtomicBoolean(false);
-    Thread hasLock;
+    Thread hasLock; //saves the current holder of the lock
 
-    //wait until free and acquire
+
+    /**
+     * tries to acquire the lock. if not successful then sends thread to sleep to avoid busy waiting.
+     */
     public void acquire(){
         Thread current = Thread.currentThread();
         boolean success = false;
         while(!success) {
             // Critical
-            if(this.hasLock == current){return;}
+            if(this.hasLock == current){return;} //already has the lock
             success = lock.compareAndSet(false, true); // if lock is free - lock it.
             if(!success){ // didn't get lock
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(18);
                 }
                 catch (InterruptedException e){ // Thread has been interrupted. Can keep running
                 }
@@ -26,7 +29,11 @@ public class MyReentrantLock implements Lock{
             }
         }
     }
-    //if success lock and true. else false
+
+    /**
+     * tries to acquire the lock.
+     * @return if successful - true. if not - false
+     */
     public boolean tryAcquire(){
         boolean res = lock.compareAndSet(false,true);
         if(res == true){
@@ -36,11 +43,12 @@ public class MyReentrantLock implements Lock{
     }
 
 
-    // might throw exception
+    /**
+     *
+     */
     public void release() {
         if (Thread.currentThread() == this.hasLock) {
             this.hasLock = null;
-
             this.lock.setRelease(false);
         }
         else {
@@ -50,7 +58,10 @@ public class MyReentrantLock implements Lock{
 
     @Override
     public void close(){
-        if(this.lock.get()){release();}
+        if(this.hasLock == Thread.currentThread()) {
+            if (this.lock.compareAndSet(true, false)) {
+            }
+        }
         return;
     }
 }

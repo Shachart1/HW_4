@@ -157,5 +157,4 @@ class TryWithResourcesAcquireWorker extends Worker {
             }
         }
     }
-
 }

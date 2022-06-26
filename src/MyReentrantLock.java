@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class MyReentrantLock implements Lock{
     AtomicBoolean lock = new AtomicBoolean(false);
     Thread hasLock; //saves the current holder of the lock
-
+    Thread releasingThread;
 
     /**
      * tries to acquire the lock. if not successful then sends thread to sleep to avoid busy waiting.
@@ -48,6 +48,7 @@ public class MyReentrantLock implements Lock{
      */
     public void release() {
         if (Thread.currentThread() == this.hasLock) {
+            this.releasingThread = this.hasLock;
             this.hasLock = null;
             this.lock.setRelease(false);
         }
@@ -58,10 +59,12 @@ public class MyReentrantLock implements Lock{
 
     @Override
     public void close(){
-        if(this.hasLock == Thread.currentThread()) {
-            if (this.lock.compareAndSet(true, false)) {
-            }
+        if(this.hasLock == Thread.currentThread()) { // This thread has the lock
+            this.lock.setRelease(false);
+            return;
         }
-        return;
+        // the lock is free, we try to release it with a Thread that didn't release it already.
+        if((this.releasingThread != Thread.currentThread()) && (!(this.lock.get()))){throw new IllegalReleaseAttempt();}
+        return; //else to all conditions is that other Thread already locked the lock. all good.
     }
 }

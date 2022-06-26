@@ -3,7 +3,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MyReentrantLock implements Lock{
     AtomicBoolean lock = new AtomicBoolean(false);
-    ArrayDeque<Thread> waitingQueue = new ArrayDeque<>();
+    Thread hasLock;
 
     //wait until free and acquire
     public void acquire(){
@@ -11,30 +11,46 @@ public class MyReentrantLock implements Lock{
         boolean success = false;
         while(!success) {
             // Critical
+            if(this.hasLock == current){return;}
             success = lock.compareAndSet(false, true); // if lock is free - lock it.
-            if(!success){
+            if(!success){ // didn't get lock
                 try {
-                    this.waitingQueue.add(current);
-                    current.wait();
+                    Thread.sleep(10);
                 }
                 catch (InterruptedException e){ // Thread has been interrupted. Can keep running
                 }
+            }
+            else{ //got lock
+                this.hasLock = current;
+                return;
             }
         }
     }
     //if success lock and true. else false
     public boolean tryAcquire(){
-        return lock.compareAndSet(false,true);
+        boolean res = lock.compareAndSet(false,true);
+        if(res == true){
+            this.hasLock = Thread.currentThread();
+        }
+        return res;
     }
+
+
     // might throw exception
-    public void release(){
-        this.lock.setRelease(false);
-        notifyAll();
-        if(false){
+    public void release() {
+        if (Thread.currentThread() == this.hasLock) {
+            this.hasLock = null;
+
+            this.lock.setRelease(false);
+        }
+        else {
             throw new IllegalReleaseAttempt();
         }
     }
+
+    @Override
     public void close(){
-        release();
+        if(this.lock.get()){release();}
+        return;
     }
 }

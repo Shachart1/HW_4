@@ -1,6 +1,10 @@
 import java.util.ArrayDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * this class represents a lock.
+ * implements lock.
+ */
 public class MyReentrantLock implements Lock{
     AtomicBoolean lock = new AtomicBoolean(false);
     Thread hasLock; //saves the current holder of the lock
@@ -44,9 +48,9 @@ public class MyReentrantLock implements Lock{
 
 
     /**
-     *tries to release the lock- only if the current thread has the lock, else throws Illegal Release Attempt error
+     *tries to release the lock- only if the current thread has the lock.
      *
-     *@throws IllegalReleaseAttempt
+     *@throws IllegalReleaseAttempt - if the current thread doesn't have the lock.
      */
     public void release() {
         if (Thread.currentThread() == this.hasLock) {
@@ -61,15 +65,18 @@ public class MyReentrantLock implements Lock{
 
     /**
      *
+     * making sure the lock was released by the current thread. if lock has been locked since then do nothing.
+     * @throws IllegalReleaseAttempt - if close was reached when no one ever locked the lock.
      */
     @Override
     public void close(){
-        if(this.hasLock == Thread.currentThread()) { // This thread has the lock
-            this.lock.setRelease(false);
+        if (this.releasingThread == null){ // no one released this lock.
+            throw new IllegalReleaseAttempt();
+        }
+        if(this.hasLock == Thread.currentThread()) { // This thread has the lock. never released
+            this.release();
             return;
         }
-        // the lock is free, we try to release it with a Thread that didn't release it already.
-        if((this.releasingThread != Thread.currentThread()) && (!(this.lock.get()))){throw new IllegalReleaseAttempt();}
         return; //else to all conditions is that other Thread already locked the lock. all good.
     }
 }

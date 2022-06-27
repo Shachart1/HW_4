@@ -1,9 +1,17 @@
 import java.util.ArrayDeque;
 
+/**
+ * this class represents an object that finds the level with most occurrences of a given number in a tree.
+ */
 public class LevelMostOccurrences {
 
+    /**
+     * scan tree by levels and return the level where the given number appeared the most.
+     * @param node - root of tree
+     * @param num - given number to check the occurrences of.
+     * @return - level in the tree with the most occurrences of the given number
+     */
     public static int getLevelWithMostOccurrences(BinNode<Integer> node, int num) {
-        // TODO: Add your code here...
         ArrayDeque<BinNode> nodeList = new ArrayDeque<>();
         int currentRow = 0;
         int count = 0;
@@ -37,6 +45,5 @@ public class LevelMostOccurrences {
             count=0;
         }
         return bestRow;
-
     }
 }

@@ -1,3 +1,6 @@
+/**
+ * this class represents a date calculator.
+ */
 public class DateCalculator {
     final static int JANUARY = 1;
     final static int FEBRUARY = 2;
@@ -12,6 +15,12 @@ public class DateCalculator {
     final static int NOVEMBER = 11;
     final static int DECEMBER = 12;
 
+    /**
+     * progress the date by num days
+     * @param date - given date to update
+     * @param num - number of days to add to date
+     * @return - updated date
+     */
     public static Date addToDate(Date date, int num) {
         int day = date.getDay();
         int month = date.getMonth();
@@ -49,9 +58,9 @@ public class DateCalculator {
 
     /**
      * will update the day as needed and return the new date
-     * @param day
-     * @param month
-     * @param year
+     * @param day - day of the original date
+     * @param month - month of the original date
+     * @param year - year of the original date
      * @param sign - 1 if we want to add a day and -1 if we want to decrease a day
      * @return - updated date
      */
@@ -67,9 +76,9 @@ public class DateCalculator {
 
     /**
      * checking if day is legal in this month
-     * @param day
-     * @param month
-     * @param year
+     * @param day - given day
+     * @param month - given month
+     * @param year - given year
      * @return updated date
      */
     private static Date progressMonth(int day,int month, int year){
@@ -120,6 +129,12 @@ public class DateCalculator {
         return false;
     }
 
+    /**
+     * checks number of days in a month, taking into account leap years.
+     * @param month - given month
+     * @param year - given year
+     * @return - the number of days in the given month in the given year
+     */
     private static int numDays(int month, int year) {
         switch (month){
             case JANUARY:

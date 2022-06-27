@@ -44,7 +44,9 @@ public class MyReentrantLock implements Lock{
 
 
     /**
+     *tries to release the lock- only if the current thread has the lock, else throws Illegal Release Attempt error
      *
+     *@throws IllegalReleaseAttempt
      */
     public void release() {
         if (Thread.currentThread() == this.hasLock) {
@@ -57,6 +59,9 @@ public class MyReentrantLock implements Lock{
         }
     }
 
+    /**
+     *
+     */
     @Override
     public void close(){
         if(this.hasLock == Thread.currentThread()) { // This thread has the lock

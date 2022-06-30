@@ -1,7 +1,7 @@
 /**
  * this class represents a date calculator.
  */
-public class DateCalculator {
+public class DateCalculator{
     final static int JANUARY = 1;
     final static int FEBRUARY = 2;
     final static int MARCH = 3;
@@ -25,31 +25,51 @@ public class DateCalculator {
         int day = date.getDay();
         int month = date.getMonth();
         int year = date.getYear();
+        // recursive base
         if (num==0){
             return date;
         }
-        if (num > 365){
-            if(isLeapYear(year) && month<FEBRUARY) {
-                return addToDate(new Date(day, month, year + 1), num - 366); // to avoid stack overflow
+
+        // making sure there is no stack overflow from recursive process
+        if (num > 365){ // need to add a year
+            // date < 1.3 - progress with 29.2
+            if(isLeapYear(year) && month<MARCH){
+                if(day == 29 && month == FEBRUARY){ // get ready to progress a year to 1.3
+                    day = 1;
+                    month = MARCH;
+                }
+                    return addToDate(new Date(day, month, year + 1), num - 366);
             }
+            // date >= 1.3 before leap year - progress with 29.2
             if(isLeapYear(year + 1) && month>FEBRUARY){
-                return addToDate(new Date(day, month, year + 1), num - 366); // to avoid stack overflow
+                return addToDate(new Date(day, month, year + 1), num - 366);
             }
+            // no 29.2 - progress regularly
             else{
                 return addToDate(new Date(day, month, year + 1), num - 365);
             }
         }
-        if (num < -365) {
-            if (isLeapYear(date.getYear()) && month > FEBRUARY) {
-                return addToDate(new Date(day, month, year - 1), num + 366); // to avoid stack overflow
+        if (num < -365) { // need to take one year back
+            // date >= 1.3 in a leap year - progress with 29.2
+            if(isLeapYear(year) && month>FEBRUARY){
+                return addToDate(new Date(day, month, year - 1), num + 366);
             }
-            if(isLeapYear(year - 1) && month < FEBRUARY){
-                return addToDate(new Date(day, month, year - 1), num + 366); // to avoid stack overflow
+            // date < 1.3 after leap year - progress with 29.2
+            if(isLeapYear(year - 1) && month<MARCH){
+
+                return addToDate(new Date(day, month, year - 1), num + 366);
             }
-            else {
-                return addToDate(new Date(day, month, year - 1), num + 365); // to avoid stack overflow
+            // no 29.2 - progress regularly
+            else{
+                // date == 29.9. go back 365 days to 28.2 instead of 29.2
+                if(day == 29 && month == FEBRUARY){ //getting ready to go back 366 days to 28.2
+                    day = 28;
+                }
+                return addToDate(new Date(day, month, year - 1), num + 365);
             }
         }
+
+        // recursive step
         if(num > 0){
             return addToDate(progressDay(day,month,year,1),num-1);
         }

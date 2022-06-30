@@ -1,4 +1,3 @@
-import java.util.ArrayDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -8,7 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class MyReentrantLock implements Lock{
     AtomicBoolean lock = new AtomicBoolean(false);
     Thread hasLock; //saves the current holder of the lock
-    Thread releasingThread;
+    int counter = 0;
 
     /**
      * tries to acquire the lock. if not successful then sends thread to sleep to avoid busy waiting.
@@ -18,7 +17,10 @@ public class MyReentrantLock implements Lock{
         boolean success = false;
         while(!success) {
             // Critical
-            if(this.hasLock == current){return;} //already has the lock
+            if(this.hasLock == current){//already has the lock
+                counter++;
+                return;
+            }
             success = lock.compareAndSet(false, true); // if lock is free - lock it.
             if(!success){ // didn't get lock
                 try {
@@ -28,6 +30,7 @@ public class MyReentrantLock implements Lock{
                 }
             }
             else{ //got lock
+                this.counter++;
                 this.hasLock = current;
                 return;
             }
@@ -39,8 +42,14 @@ public class MyReentrantLock implements Lock{
      * @return if successful - true. if not - false
      */
     public boolean tryAcquire(){
+        Thread current = Thread.currentThread();
+        if(hasLock == current){ // Thread reentering.
+            counter++;
+            return true;
+        }
         boolean res = lock.compareAndSet(false,true);
         if(res == true){
+            counter++;
             this.hasLock = Thread.currentThread();
         }
         return res;
@@ -54,9 +63,11 @@ public class MyReentrantLock implements Lock{
      */
     public void release() {
         if (Thread.currentThread() == this.hasLock) {
-            this.releasingThread = this.hasLock;
-            this.hasLock = null;
-            this.lock.setRelease(false);
+            counter--;
+            if (counter == 0) { // final release of the lock.
+                this.hasLock = null;
+                this.lock.setRelease(false);
+            }
         }
         else {
             throw new IllegalReleaseAttempt();
@@ -64,19 +75,11 @@ public class MyReentrantLock implements Lock{
     }
 
     /**
-     *
-     * making sure the lock was released by the current thread. if lock has been locked since then do nothing.
-     * @throws IllegalReleaseAttempt - if close was reached when no one ever locked the lock.
+     * release the lock using the func release()
+     * @throws IllegalReleaseAttempt - in case of illegal attempt to release the lock.
      */
     @Override
-    public void close(){
-        if (this.releasingThread == null){ // no one released this lock.
-            throw new IllegalReleaseAttempt();
-        }
-        if(this.hasLock == Thread.currentThread()) { // This thread has the lock. never released
-            this.release();
-            return;
-        }
-        return; //else to all conditions is that other Thread already locked the lock. all good.
+    public void close() {
+        this.release();
     }
 }
